@@ -1,3 +1,4 @@
+import os
 import json
 import urllib3
 from OmegaExpansion import oledExp
@@ -13,8 +14,8 @@ def writeHeadline (title, time):
     oledExp.clear()
 
     # writes the authors at the bottom - might overflow back to page 0
-#    oledExp.setCursor(6,0)
- #   oledExp.write(author)
+    # oledExp.setCursor(6,0)
+    # oledExp.write(author)
 
     # writes the headline to the screen to clear overflow from author
     oledExp.setCursor(0,0)
@@ -79,5 +80,5 @@ if __name__ == '__main__':
     writeHeadline (
         latest['title'],
         latest['publishedAt']
-       # latest['author']
+       #latest['author']
     )
