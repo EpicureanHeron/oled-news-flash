@@ -1,4 +1,3 @@
-import os
 import json
 import urllib3
 from OmegaExpansion import oledExp
@@ -6,7 +5,7 @@ from OmegaExpansion import oledExp
 # Takes in details of a headline and prints it to the OLED screen
 # Some basic error checking built into print ordering to prevent overwriting of text,
 # and proper truncation of titles
-def writeHeadline (title, time, author):
+def writeHeadline (title, time):
     if oledExp.driverInit() != 0:
         print 'ERROR: Could not initialize the OLED Expansion'
         return False
@@ -14,8 +13,8 @@ def writeHeadline (title, time, author):
     oledExp.clear()
 
     # writes the authors at the bottom - might overflow back to page 0
-    oledExp.setCursor(6,0)
-    oledExp.write(author)
+#    oledExp.setCursor(6,0)
+ #   oledExp.write(author)
 
     # writes the headline to the screen to clear overflow from author
     oledExp.setCursor(0,0)
@@ -29,12 +28,14 @@ def writeHeadline (title, time, author):
 # creates a GET request to the newsapi /articles endpoint
 # requires API key and source to be passed in, default sorts by 'latest'
 def getNewsJson (apiKey, source, sortMode='latest'):
+    # urllib3.disable_warnings()
     # creates a new http
     http = urllib3.PoolManager()
 
     # construct the url from the data given
-    url = 'https://newsapi.org/v1/articles?' + 'source=' + source + "&sortBy=" + sortMode
-
+    url = 'https://newsapi.org/v2/top-headlines?' + 'sources=' + source
+    print(url)
+    print(apiKey)
     # Adds your API key to the header
     headers = {
         'X-API-KEY' : apiKey
@@ -58,7 +59,7 @@ if __name__ == '__main__':
 
     # read the config file relative to the script location
     with open( '/'.join([dirName, 'config.json']) ) as f:
-    	config = json.load(f)
+        config = json.load(f)
 
     newsJson = getNewsJson (
         config['X-API-KEY'],
@@ -77,6 +78,6 @@ if __name__ == '__main__':
     # sends the headline off to be written
     writeHeadline (
         latest['title'],
-        latest['publishedAt'],
-        latest['author']
+        latest['publishedAt']
+       # latest['author']
     )
